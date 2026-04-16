@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BipMatch! · Conexões Reais</title>
+  <!-- Fonte Open Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: #fdf1e7;  /* fundo pastel suave */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+      margin: 0;
+    }
+
+    /* Container que simula um celular */
+    .phone-frame {
+      max-width: 380px;
+      width: 100%;
+      height: 780px;
+      background: #ffffff;
+      border-radius: 44px;
+      box-shadow: 0 30px 50px rgba(240, 140, 80, 0.15), 0 10px 20px rgba(0,0,0,0.05);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ffe4d6;
+    }
+
+    /* Cabeçalho fixo (logo + pontos) */
+    .app-header {
+      padding: 18px 18px 10px 18px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #fff0e3;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .points-badge {
+      background: #fbe9dd;
+      padding: 8px 16px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #ffd2b3;
+      color: #b3541c;
+      font-weight: 600;
+    }
+
+    .points-badge i {
+      color: #f39c12;
+    }
+
+    /* Conteúdo principal com scroll */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 16px 12px;
+      background: #fefaf7;
+      scroll-behavior: smooth;
+    }
+
+    /* Barra de navegação inferior (5 itens) */
+    .bottom-nav {
+      background: white;
+      padding: 10px 8px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid #f7ded0;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.7rem;
+      color: #b9a394;
+      cursor: pointer;
+      padding: 6px 0;
+      border-radius: 30px;
+      transition: all 0.2s;
+      flex: 1;
+      max-width: 70px;
+    }
+
+    .nav-item i {
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+      color: #b9a394;
+    }
+
+    .nav-item.active {
+      color: #e67635;
+    }
+    .nav-item.active i {
+      color: #e67635;
+    }
+
+    /* Telas */
+    .screen {
+      display: none;
+    }
+    .screen.active-screen {
+      display: block;
+    }
+
+    /* Cards e estilos */
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      margin: 16px 0 12px;
+    }
+    .section-title h3 {
+      font-weight: 600;
+      color: #422c1e;
+    }
+
+    .mission-card {
+      background: white;
+      border-radius: 24px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 16px -6px #fbdac8;
+      border: 1px solid #ffede1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .mission-icon {
+      width: 48px;
+      height: 48px;
+      background: #fff3e9;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d2691e;
+      font-size: 22px;
+    }
+
+    .mission-btn {
+      background: #fee6d6;
+      border: none;
+      border-radius: 40px;
+      padding: 10px 16px;
+      font-weight: 600;
+      color: #a34f1a;
+      cursor: pointer;
+      border: 1px solid #fecbad;
+      transition: 0.2s;
+    }
+    .mission-btn.completed {
+      background: #e7dbd2;
+      color: #6e5e52;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    /* Carrossel de eventos */
+    .carousel-events {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding: 6px 2px 16px;
+      scrollbar-width: none;
+    }
+    .event-slide {
+      min-width: 200px;
+      background: white;
+      border-radius: 28px;
+      padding: 16px;
+      box-shadow: 0 6px 14px #f0cfbc;
+      border: 1px solid #ffdcc8;
+    }
+
+    /* perfil */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin: 10px 0 24px;
+    }
+    .avatar-placeholder {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(145deg, #fed7b0, #fdb07b);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 40px;
+    }
+
+    /* chat */
+    .chat-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 8px;
+      border-bottom: 1px solid #f2dbcc;
+      cursor: pointer;
+      border-radius: 20px;
+    }
+    .chat-detail-view {
+      background: #f9efe7;
+      border-radius: 24px;
+      padding: 18px;
+      margin: 20px 0;
+    }
+
+    /* mapa */
+    .map-container {
+      border-radius: 32px;
+      overflow: hidden;
+      margin: 16px 0;
+      box-shadow: 0 8px 18px #ebcbb8;
+    }
+    .map-static {
+      width: 100%;
+      height: 220px;
+      background: #aac9de;
+      position: relative;
+    }
+
+    /* Utils */
+    .text-accent { color: #d9661a; }
+    button { font-family: 'Open Sans', sans-serif; }
+  </style>
+</head>
+<body>
+<div class="phone-frame">
+  <!-- Header -->
+  <div class="app-header">
+    <div class="logo-area">
+      <!-- IMPORTANTE: Substitua pelo caminho da sua imagem de logo -->
+      <img src="logo.png" alt="BipMatch" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div style="display: none; align-items: center; gap:6px;">
+        <div style="background:#f39c12; width:36px; height:36px; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-heart"></i></div>
+        <span style="font-weight:700; font-size:1.5rem; color:#422c1e;">Bip<span style="color:#e67635;">Match!</span></span>
+      </div>
+    </div>
+    <div class="points-badge" id="globalPointsDisplay">
+      <i class="fas fa-star"></i>
+      <span id="userTotalPoints">230</span>
+    </div>
+  </div>
+
+  <!-- Main scroll area -->
+  <div class="main-content" id="mainContent">
+    <!-- HOME SCREEN -->
+    <div id="homeScreen" class="screen active-screen">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-weight:600;">Missões diárias</h3>
+        <i class="fas fa-sliders-h" id="filterIcon" style="color:#d97c3e; font-size:1.3rem; cursor:pointer;"></i>
+      </div>
+      <div id="missionsContainer"></div>
+      <div class="section-title"><h3>✨ Para você</h3></div>
+      <div style="background:white; border-radius:28px; padding:16px; margin-bottom:20px; border:1px solid #ffe0ce;">
+        <div style="display:flex; gap:12px;">
+          <div style="width:60px; height:60px; background:#ffe5d3; border-radius:20px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-user-circle" style="font-size:36px; color:#c5692a;"></i></div>
+          <div><strong>Júlia, 28</strong><p style="color:#a57254;"><i class="fas fa-map-pin"></i> Barueri</p></div>
+        </div>
+      </div>
+      <p style="text-align:center; margin:8px 0 20px; color:#bc9a82;">BipMatch! · conexões reais</p>
+    </div>
+
+    <!-- PERFIL SCREEN -->
+    <div id="profileScreen" class="screen">
+      <div class="profile-header">
+        <div class="avatar-placeholder"><i class="fas fa-user-circle"></i></div>
+        <div>
+          <h2 style="font-weight:700;">Helena</h2>
+          <p style="color:#9b745b;"><i class="fas fa-map-pin"></i> Alphaville, Barueri</p>
+        </div>
+        <i class="fas fa-pen" style="color:#c26e38; margin-left:auto;"></i>
+      </div>
+      <div style="display:flex; gap:24px; margin:10px 0 20px;">
+        <div><span style="font-weight:700; font-size:1.3rem;" id="profilePoints">230</span> pts</div>
+        <div><span style="font-weight:700;">8</span> missões</div>
+      </div>
+      <div style="background:white; border-radius:24px; padding:18px; border:1px solid #ffe2cf;">
+        <p style="font-weight:600;">📝 Bio</p>
+        <p>Apaixonada por livros, cultura coreana e boa comida. Sem julgamentos pela aparência :)</p>
+      </div>
+      <h4 style="margin: 20px 0 8px;">🏅 Histórico de missões</h4>
+      <ul id="missionHistoryLog" style="list-style:none;"></ul>
+    </div>
+
+    <!-- LOCAIS SCREEN -->
+    <div id="placesScreen" class="screen">
+      <h3 style="margin-bottom:8px;">🍕 Parceiros</h3>
+      <!-- cards dos locais -->
+      <div style="background:white; border-radius:28px; padding:16px; margin-bottom:16px; border:1px solid #ffdac7;">
+        <div style="display:flex; gap:12px;"><div style="width:60px; height:60px; background:#f3cfb5; border-radius:20px;"></div><div><strong>Larezzo Pizzaria</strong><p>Barueri · 4.1 ★</p></div></div>
+      </div>
+      <div style="background:white; border-radius:28px; padding:16px; margin-bottom:20px; border:1px solid #ffdac7;">
+        <div style="display:flex; gap:12px;"><div style="width:60px; height:60px; background:#d1e0cf; border-radius:20px;"></div><div><strong>Parque Dom José</strong><p>Barueri · 4.5 ★</p></div></div>
+      </div>
+      <h4>🎉 Eventos especiais</h4>
+      <div class="carousel-events">
+        <div class="event-slide"><i class="fas fa-music" style="color:#c0392b;"></i> <strong>Rock in Rio</strong><p style="font-size:0.8rem;">5000 pts = desconto para casal</p></div>
+        <div class="event-slide"><i class="fas fa-book"></i> <strong>Bienal do Livro</strong><p style="font-size:0.8rem;">Leve um par com 3000 pts</p></div>
+        <div class="event-slide"><i class="fas fa-drumstick-bite"></i> <strong>Feira Coreana</strong><p style="font-size:0.8rem;">2000 pts = brinde</p></div>
+      </div>
+    </div>
+
+    <!-- CHAT SCREEN -->
+    <div id="chatScreen" class="screen">
+      <h3>💬 Conversas</h3>
+      <div id="chatListContainer"></div>
+      <div id="chatDetailPanel" style="display:none;"></div>
+    </div>
+
+    <!-- MAPA SCREEN -->
+    <div id="mapScreen" class="screen">
+      <h3>🗺️ Pessoas por perto</h3>
+      <div class="map-container">
+        <div class="map-static" id="mapElement">
+          <!-- Mapa estático do OpenStreetMap (Barueri) -->
+          <img src="https://staticmap.openstreetmap.de/staticmap.php?center=-23.505,-46.876&zoom=13&size=380x220&maptype=satellite" style="width:100%; height:100%; object-fit:cover;" alt="Mapa Barueri">
+        </div>
+      </div>
+      <p style="color:#764d31;"><i class="fas fa-user-circle"></i> 12 pessoas ativas agora</p>
+      <div style="display:flex; gap:10px; margin-top:12px;">
+        <span style="background:#fee0ce; padding:6px 16px; border-radius:40px;"><i class="fas fa-venus"></i> 6</span>
+        <span style="background:#fee0ce; padding:6px 16px; border-radius:40px;"><i class="fas fa-mars"></i> 4</span>
+        <span style="background:#fee0ce; padding:6px 16px; border-radius:40px;"><i class="fas fa-genderless"></i> 2</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (5 items) -->
+  <div class="bottom-nav">
+    <button class="nav-item active" data-screen="home"><i class="fas fa-home"></i><span>Home</span></button>
+    <button class="nav-item" data-screen="profile"><i class="fas fa-user"></i><span>Perfil</span></button>
+    <button class="nav-item" data-screen="places"><i class="fas fa-map-pin"></i><span>Locais</span></button>
+    <button class="nav-item" data-screen="chat"><i class="fas fa-comment"></i><span>Chat</span></button>
+    <button class="nav-item" data-screen="map"><i class="fas fa-map"></i><span>Mapa</span></button>
+  </div>
+</div>
+
+<script>
+  (function(){
+    // Estado da aplicação
+    let userPoints = 230;
+    
+    // Missões diárias
+    const missions = [
+      { id: 1, title: 'Fale com alguém no chat', desc: '+20 pontos', icon: 'fa-comment-dots', points: 20, completed: false },
+      { id: 2, title: 'Curta o perfil de um usuário', desc: '+10 pontos', icon: 'fa-heart', points: 10, completed: true }
+    ];
+
+    // Dados de chat
+    const chats = [
+      { name: 'Marina', lastMsg: 'Vamos na Larezzo? 🍕', messages: ['Oi!', 'Bora na pizzaria hoje?'] },
+      { name: 'Pedro', lastMsg: 'Adorei o parque! 🌳', messages: ['O parque estava lindo', 'Vamos repetir?'] },
+      { name: 'Bia', lastMsg: 'Missão concluída ✅', messages: ['Ganhei +10 pontos!', 'E você?'] }
+    ];
+
+    // Elementos
+    const screens = {
+      home: document.getElementById('homeScreen'),
+      profile: document.getElementById('profileScreen'),
+      places: document.getElementById('placesScreen'),
+      chat: document.getElementById('chatScreen'),
+      map: document.getElementById('mapScreen')
+    };
+    const navItems = document.querySelectorAll('.nav-item');
+    const pointsSpans = {
+      global: document.getElementById('userTotalPoints'),
+      profile: document.getElementById('profilePoints')
+    };
+    const missionsContainer = document.getElementById('missionsContainer');
+    const historyLog = document.getElementById('missionHistoryLog');
+    const chatListContainer = document.getElementById('chatListContainer');
+    const chatDetail = document.getElementById('chatDetailPanel');
+    const filterIcon = document.getElementById('filterIcon');
+
+    // Atualizar pontos
+    function updatePointsUI() {
+      pointsSpans.global.textContent = userPoints;
+      if(pointsSpans.profile) pointsSpans.profile.textContent = userPoints;
+    }
+
+    // Renderizar missões na Home
+    function renderMissions() {
+      let html = '';
+      missions.forEach(m => {
+        html += `<div class="mission-card">
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="mission-icon"><i class="fas ${m.icon}"></i></div>
+            <div><h4>${m.title}</h4><p>${m.desc}</p></div>
+          </div>
+          <button class="mission-btn ${m.completed ? 'completed' : ''}" data-id="${m.id}">${m.completed ? 'Concluída' : 'Concluir'}</button>
+        </div>`;
+      });
+      missionsContainer.innerHTML = html;
+      document.querySelectorAll('.mission-btn[data-id]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = parseInt(btn.dataset.id);
+          const mission = missions.find(m=>m.id===id);
+          if(mission && !mission.completed) {
+            mission.completed = true;
+            userPoints += mission.points;
+            updatePointsUI();
+            renderMissions();
+            renderHistory();
+          }
+        });
+      });
+    }
+
+    function renderHistory() {
+      const completed = missions.filter(m=>m.completed);
+      if(historyLog) {
+        historyLog.innerHTML = completed.map(m => `<li style="padding:10px 0; border-bottom:1px solid #efd9ca;"><i class="fas ${m.icon}"></i> ${m.title} · +${m.points} pts</li>`).join('');
+      }
+    }
+
+    // Chat rendering
+    function renderChatList() {
+      chatListContainer.innerHTML = chats.map((c,idx) => `
+        <div class="chat-row" data-chat-index="${idx}">
+          <div style="width:48px; height:48px; background:#fad3bb; border-radius:30px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-user"></i></div>
+          <div style="flex:1"><strong>${c.name}</strong><p>${c.lastMsg}</p></div>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      `).join('');
+      document.querySelectorAll('.chat-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+          const idx = row.dataset.chatIndex;
+          const chat = chats[idx];
+          chatDetail.style.display = 'block';
+          chatDetail.innerHTML = `<div style="background:#fef2ea; border-radius:24px; padding:16px;"><strong>${chat.name}</strong><hr style="margin:8px 0;">`+
+            chat.messages.map(msg => `<div style="background:white; padding:10px 14px; border-radius:20px; margin:8px 0;">${msg}</div>`).join('') +
+            `<button id="backToChatList" style="margin-top:12px; background:none; border:none; color:#d9661a;"><i class="fas fa-arrow-left"></i> Voltar</button></div>`;
+          document.getElementById('backToChatList').addEventListener('click', ()=>{
+            chatDetail.style.display='none';
+          });
+        });
+      });
+    }
+
+    // Navegação
+    function switchScreen(screenId) {
+      Object.values(screens).forEach(s => s.classList.remove('active-screen'));
+      screens[screenId].classList.add('active-screen');
+      navItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.screen === screenId);
+      });
+      document.getElementById('mainContent').scrollTop = 0;
+    }
+
+    // Eventos de navegação
+    navItems.forEach(item => {
+      item.addEventListener('click', () => switchScreen(item.dataset.screen));
+    });
+
+    // Filtro (ícone de sliders)
+    filterIcon.addEventListener('click', () => {
+      alert('🔍 Filtros: você pode ajustar preferências de descoberta.');
+    });
+
+    // Inicialização
+    renderMissions();
+    renderHistory();
+    renderChatList();
+    updatePointsUI();
+    switchScreen('home');
+
+    // Se logo não carregar, mostra fallback (já tratado no onerror)
+  })();
+</script>
+</body>
+</html>
